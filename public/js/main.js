@@ -25,7 +25,7 @@ form.addEventListener('submit', async e => {
         email: form.email.value,
         edad: form.edad.value
     };
-    // Si hay un atributo data-id en el form haríamos PUT, sino POST
+
     const id = form.dataset.id;
     const method = id ? 'PUT' : 'POST';
     const url = id ? `${API}/${id}` : API;
