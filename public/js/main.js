@@ -1,56 +1,136 @@
-const API = '/api/users';
 const form = document.getElementById('userForm');
-const tableBody = document.getElementById('usersTable');
+const resp = document.getElementById('response');
+const lista = document.getElementById('history');
+const API = '/api/users';
 
-async function fetchUsers() {
-    const res = await fetch(API);
-    const users = await res.json();
-    tableBody.innerHTML = users.map(u => `
-    <tr>
-        <td>${u.nombre}</td>
-        <td>${u.email}</td>
-        <td>${u.edad}</td>
-        <td>
-            <button onclick="editUser('${u._id}')">Editar</button>
-        </td>
-    </tr>
-    `).join('');
+const editModal = document.getElementById('editModal');
+const editForm = document.getElementById('editForm');
+const editNameInput = document.getElementById('editName');
+const editEmailInput = document.getElementById('editEmail');
+const editAgeInput = document.getElementById('editAge');
+const cancelEditBtn = document.getElementById('cancelEdit');
+const closeBtn = document.querySelector('.modal .close');
+
+resp.style.display = 'none';
+
+function openEditModal() {
+    editModal.style.display = 'block';
 }
 
-// Crear o actualizar
-form.addEventListener('submit', async e => {
-    e.preventDefault();
-    const data = {
-        nombre: form.nombre.value,
-        email: form.email.value,
-        edad: form.edad.value
-    };
+function closeEditModal() {
+    editModal.style.display = 'none';
+    editForm.reset();
+    delete editForm.dataset.id;
+}
 
-    const id = form.dataset.id;
-    const method = id ? 'PUT' : 'POST';
-    const url = id ? `${API}/${id}` : API;
-
-    await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    });
-    form.reset();
-    delete form.dataset.id;
-    fetchUsers();
+// Cerrar con “×”
+closeBtn.addEventListener('click', closeEditModal);
+// Cerrar con “Cancelar”
+cancelEditBtn.addEventListener('click', closeEditModal);
+// Cerrar al clicar fuera
+window.addEventListener('click', e => {
+    if (e.target === editModal) closeEditModal();
 });
 
-function editUser(id) {
-    // Traer datos del usuario, rellenar formulario y poner data-id
-    fetch(`${API}/${id}`)
-        .then(r => r.json())
-        .then(u => {
-            form.nombre.value = u.nombre;
-            form.email.value = u.email;
-            form.edad.value = u.edad;
-            form.dataset.id = u._id;
+
+
+// Envía nuevo o actualiza existente
+form.addEventListener('submit', async e => {
+    e.preventDefault();
+    resp.style.display = 'none';
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const age = parseInt(document.getElementById('age').value, 10);
+
+    // Determina si es PUT (edición) o POST (nuevo)
+    const method = form.dataset.id ? 'PUT' : 'POST';
+    const url = form.dataset.id
+        ? `${API}/${form.dataset.id}`
+        : API;
+
+    try {
+        const res = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, age })
         });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || 'Error inesperado');
+        resp.innerText = data.message || 'Operación exitosa';
+        resp.style.display = 'block';
+        form.reset();
+        delete form.dataset.id;
+        form.querySelector('button').textContent = 'Enviar';
+        cargarHistorial();
+    } catch (err) {
+        resp.innerText = err.message;
+        resp.style.display = 'block';
+    }
+});
+
+// Carga todos los usuarios y enlaza botón de editar
+async function cargarHistorial() {
+    try {
+        const res = await fetch(API);
+        const usuarios = await res.json();
+        lista.innerHTML = usuarios.map(u => `
+        <li>
+            ${u.name} — ${u.email} — ${u.age} años
+            <button class="edit" data-id="${u._id}">Editar</button>
+        </li>
+    `).join('');
+
+        lista.querySelectorAll('button.edit').forEach(btn => {
+            btn.addEventListener('click', () => editarUsuario(btn.dataset.id));
+        });
+    } catch {
+        lista.innerHTML = '<li>Error al cargar registros.</li>';
+    }
 }
 
-// Carga inicial
-fetchUsers();
+async function editarUsuario(id) {
+    try {
+        const res = await fetch(`${API}/${id}`);
+        if (!res.ok) throw new Error('No se pudo obtener el usuario');
+        const u = await res.json();
+
+        editForm.dataset.id = u._id;
+        editNameInput.value = u.name;
+        editEmailInput.value = u.email;
+        editAgeInput.value = u.age;
+        resp.style.display = 'none';
+        openEditModal();
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
+editForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = editForm.dataset.id;
+    const name = editNameInput.value.trim();
+    const email = editEmailInput.value.trim();
+    const age = parseInt(editAgeInput.value, 10);
+
+    try {
+        const res = await fetch(`${API}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, age })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al actualizar');
+
+        resp.innerText = 'Usuario actualizado correctamente';
+        resp.style.display = 'block';
+        closeEditModal();
+        cargarHistorial();
+    } catch (err) {
+        resp.innerText = err.message;
+        resp.style.display = 'block';
+    }
+});
+
+window.addEventListener('DOMContentLoaded', cargarHistorial);

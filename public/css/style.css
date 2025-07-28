@@ -17,18 +17,13 @@ h2 {
     margin-bottom: 20px;
 }
 
-/* Contenedor común para form y tabla */
-form#userForm,
-table {
+/* userForm */
+form#userForm {
     background: #fff;
+    padding: 20px;
+    border-radius: 6px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-    border-radius: 6px;
-}
-
-/* Formulario */
-form#userForm {
-    padding: 20px;
 }
 
 form#userForm input,
@@ -54,81 +49,90 @@ form#userForm button:hover {
     background: #0056b3;
 }
 
-/* Tabla de usuarios */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-thead {
-    background: #007bff;
-    color: #fff;
-}
-
-th,
-td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-tbody tr:nth-child(even) {
-    background: #f2f2f2;
-}
-
-tbody tr:hover {
+/* Mensaje de resp */
+#response {
+    display: none;
     background: #e9f7fe;
+    border: 1px solid #b3e5fc;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
-/* Botones de acción en tabla */
-button.edit,
-button.delete {
+/* history de registros */
+ul#history {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 550px;
+    overflow-y: auto;
+}
+
+ul#history li {
+    background: #fff;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Botón de editar dentro del history */
+ul#history li button.edit {
     padding: 6px 12px;
     border: none;
     border-radius: 4px;
-    cursor: pointer;
-    color: #fff;
-    font-size: 0.9rem;
-}
-
-button.edit {
     background: #28a745;
-}
-
-button.delete {
-    background: #dc3545;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
 }
 
 /* Responsive */
 @media (max-width: 600px) {
-    thead {
-        display: none;
+    ul#history li {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    table,
-    tbody,
-    tr,
-    td {
-        display: block;
-        width: 100%;
+    ul#history li button.edit {
+        margin-top: 8px;
     }
+}
 
-    tr {
-        margin-bottom: 15px;
-    }
+/* --------------- */
+/* Estilos del Modal */
+.modal {
+    display: none;
+    /* Oculto por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: rgba(0, 0, 0, 0.5);
+}
 
-    td {
-        position: relative;
-        padding-left: 50%;
-        text-align: right;
-    }
+.modal-content {
+    background: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 6px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
 
-    td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 15px;
-        width: calc(50% - 30px);
-        font-weight: bold;
-        text-align: left;
-    }
+.modal-content .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
 }
