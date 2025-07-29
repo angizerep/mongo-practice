@@ -1,5 +1,3 @@
-/* --------------- */
-/* Reset y base */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -16,7 +14,10 @@ body {
     text-align: justify;
 }
 
-/* Encabezado principal */
+h2 {
+    text-align: center;
+}
+
 header h1 {
     font-size: 2rem;
     color: #2c3e50;
@@ -24,7 +25,6 @@ header h1 {
     margin-bottom: 10px;
 }
 
-/* Secciones del main */
 main section {
     background-color: #fff;
     padding: 15px;
@@ -33,27 +33,22 @@ main section {
     border-radius: 6px;
 }
 
-/* Títulos de sección centrados */
-main section>header h2 {
+main section > header h2 {
     font-size: 1.4rem;
     color: #2980b9;
-    text-align: center;
     margin-bottom: 10px;
 }
 
-/* Asegura que cualquier h2 quede centrado */
-h2 {
-    text-align: center;
-}
-
-/* Formulario */
-form#userForm {
+/* Formularios */
+form#userForm,
+form#editForm {
     display: flex;
     flex-direction: column;
 }
 
 form#userForm input,
-form#userForm button {
+form#userForm button,
+form#editForm input {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -72,17 +67,6 @@ form#userForm button {
 
 form#userForm button:hover {
     background: #1f5f8a;
-}
-
-/* Mensaje de respuesta */
-#response {
-    display: none;
-    background: #e9f7fe;
-    border: 1px solid #b3e5fc;
-    border-radius: 4px;
-    padding: 15px;
-    margin-top: 10px;
-    text-align: center;
 }
 
 /* Historial */
@@ -119,37 +103,28 @@ ul#history li button.edit:hover {
     background: #1f5f8a;
 }
 
-/* --------------- */
-/* Modal: overlay y contenido centrado */
+/* Modales */
 .modal {
     display: none;
-    /* lo muestras con JS */
     position: fixed;
     z-index: 1000;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
-    /* fijamos posicionamiento y transform para centrar */
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     width: 80%;
     max-width: 600px;
-    /* más grande */
     background: #fff;
     padding: 30px;
-    /* más espacio */
     border-radius: 6px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Botón de cierre */
 .modal-content .close {
     position: absolute;
     top: 10px;
@@ -159,29 +134,13 @@ ul#history li button.edit:hover {
     color: #7f8c8d;
 }
 
-/* Título del modal */
 .modal-content header h2 {
     margin-bottom: 20px;
     color: #2980b9;
     text-align: center;
 }
 
-/* Formulario de edición */
-form#editForm {
-    display: flex;
-    flex-direction: column;
-}
-
-form#editForm input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-/* Botones dentro del modal */
+/* Botones en modal */
 .modal-content .buttons {
     display: flex;
     gap: 10px;
@@ -198,7 +157,6 @@ form#editForm input {
     transition: background 0.2s;
 }
 
-/* Botón Guardar */
 .modal-content .buttons button[type="submit"] {
     background: #2980b9;
 }
@@ -207,7 +165,6 @@ form#editForm input {
     background: #1f5f8a;
 }
 
-/* Botón Cancelar */
 .modal-content .buttons button#cancelEdit {
     background: #7f8c8d;
 }
@@ -216,19 +173,7 @@ form#editForm input {
     background: #5e6a73;
 }
 
-/* Responsive mínimo */
-@media (max-width: 600px) {
-    ul#history li {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    ul#history li button.edit {
-        margin-top: 8px;
-    }
-}
-
-/* Modal de notificación éxito/error */
+/* Notificación */
 #notifyBox.success {
     background-color: #ffffff;
     border: 6px solid #2ecc71;

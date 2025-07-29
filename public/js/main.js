@@ -1,7 +1,8 @@
+const API = '/users';
+
 const form = document.getElementById('userForm');
 const resp = document.getElementById('response');
 const lista = document.getElementById('history');
-const API = '/api/users';
 
 const editModal = document.getElementById('editModal');
 const editForm = document.getElementById('editForm');
@@ -16,7 +17,6 @@ const notifyBox = document.getElementById('notifyBox');
 const notifyTitle = document.getElementById('notifyTitle');
 const notifyMessage = document.getElementById('notifyMessage');
 const closeNotify = document.getElementById('closeNotify');
-
 
 resp.style.display = 'none';
 
@@ -39,9 +39,7 @@ window.addEventListener('click', e => {
     if (e.target === editModal) closeEditModal();
 });
 
-
-
-// Envía nuevo o actualiza existente
+// Crear nuevo
 form.addEventListener('submit', async e => {
     e.preventDefault();
 
@@ -65,7 +63,7 @@ form.addEventListener('submit', async e => {
         form.reset();
         delete form.dataset.id;
         form.querySelector('button').textContent = 'Enviar';
-        cargarHistorial();
+        loadHistory();
 
         // Mostrar notificación de éxito
         showNotify('success', 'Usuario registrado correctamente');
@@ -75,9 +73,8 @@ form.addEventListener('submit', async e => {
     }
 });
 
-
-// Carga todos los usuarios y enlaza botón de editar
-async function cargarHistorial() {
+// Carga todos los usuarios
+async function loadHistory() {
     try {
         const res = await fetch(API);
         const usuarios = await res.json();
@@ -130,7 +127,7 @@ editForm.addEventListener('submit', async e => {
         if (!res.ok) throw new Error(data.error || 'Error al actualizar');
 
         closeEditModal();
-        cargarHistorial();
+        loadHistory();
         showNotify('success', 'Usuario actualizado correctamente');
 
     } catch (err) {
@@ -142,8 +139,8 @@ editForm.addEventListener('submit', async e => {
 function showNotify(type, message) {
     notifyTitle.innerText = type === 'error' ? 'Error' : 'Éxito';
     notifyMessage.innerText = message;
-    notifyBox.className = 'modal-content'; // Reset
-    notifyBox.classList.add(type);         // 'success' o 'error'
+    notifyBox.className = 'modal-content';
+    notifyBox.classList.add(type);
     notifyModal.style.display = 'block';
 }
 
@@ -151,6 +148,4 @@ closeNotify.addEventListener('click', () => {
     notifyModal.style.display = 'none';
 });
 
-
-
-window.addEventListener('DOMContentLoaded', cargarHistorial);
+window.addEventListener('DOMContentLoaded', loadHistory);

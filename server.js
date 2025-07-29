@@ -14,8 +14,13 @@ connectDB();
 app.use(express.json());
 app.use(express.static('public'));
 
-// Prefijo API
-app.use('/api/users', userRoutes);
+// API
+app.use('/users', userRoutes);
+
+// Ejemplo
+app.get('/saludo', (req, res) => {
+    res.json({ mensaje: 'Hola desde el backend!!' });
+});
 
 // Arrancar servidor
 app.listen(PORT, () =>
