@@ -11,6 +11,13 @@ const editAgeInput = document.getElementById('editAge');
 const cancelEditBtn = document.getElementById('cancelEdit');
 const closeBtn = document.querySelector('.modal .close');
 
+const notifyModal = document.getElementById('notifyModal');
+const notifyBox = document.getElementById('notifyBox');
+const notifyTitle = document.getElementById('notifyTitle');
+const notifyMessage = document.getElementById('notifyMessage');
+const closeNotify = document.getElementById('closeNotify');
+
+
 resp.style.display = 'none';
 
 function openEditModal() {
@@ -37,17 +44,13 @@ window.addEventListener('click', e => {
 // Envía nuevo o actualiza existente
 form.addEventListener('submit', async e => {
     e.preventDefault();
-    resp.style.display = 'none';
 
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim();
     const age = parseInt(document.getElementById('age').value, 10);
 
-    // Determina si es PUT (edición) o POST (nuevo)
     const method = form.dataset.id ? 'PUT' : 'POST';
-    const url = form.dataset.id
-        ? `${API}/${form.dataset.id}`
-        : API;
+    const url = form.dataset.id ? `${API}/${form.dataset.id}` : API;
 
     try {
         const res = await fetch(url, {
@@ -58,17 +61,20 @@ form.addEventListener('submit', async e => {
         const data = await res.json();
 
         if (!res.ok) throw new Error(data.error || 'Error inesperado');
-        resp.innerText = data.message || 'Operación exitosa';
-        resp.style.display = 'block';
+
         form.reset();
         delete form.dataset.id;
         form.querySelector('button').textContent = 'Enviar';
         cargarHistorial();
+
+        // Mostrar notificación de éxito
+        showNotify('success', 'Usuario registrado correctamente');
     } catch (err) {
-        resp.innerText = err.message;
-        resp.style.display = 'block';
+        // Mostrar notificación de error
+        showNotify('error', err.message);
     }
 });
+
 
 // Carga todos los usuarios y enlaza botón de editar
 async function cargarHistorial() {
@@ -123,14 +129,28 @@ editForm.addEventListener('submit', async e => {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Error al actualizar');
 
-        resp.innerText = 'Usuario actualizado correctamente';
-        resp.style.display = 'block';
         closeEditModal();
         cargarHistorial();
+        showNotify('success', 'Usuario actualizado correctamente');
+
     } catch (err) {
-        resp.innerText = err.message;
-        resp.style.display = 'block';
+        showNotify('error', err.message);
+
     }
 });
+
+function showNotify(type, message) {
+    notifyTitle.innerText = type === 'error' ? 'Error' : 'Éxito';
+    notifyMessage.innerText = message;
+    notifyBox.className = 'modal-content'; // Reset
+    notifyBox.classList.add(type);         // 'success' o 'error'
+    notifyModal.style.display = 'block';
+}
+
+closeNotify.addEventListener('click', () => {
+    notifyModal.style.display = 'none';
+});
+
+
 
 window.addEventListener('DOMContentLoaded', cargarHistorial);

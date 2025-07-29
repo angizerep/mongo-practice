@@ -9,34 +9,64 @@
 </head>
 
 <body>
-    <h1>Registro de Usuarios</h1>
+    <header>
+        <h1>Registro de Usuarios</h1>
+    </header>
 
-    <form id="userForm">
-        <input type="text" id="name" placeholder="name" required />
-        <input type="email" id="email" placeholder="email" required />
-        <input type="number" id="age" placeholder="age" min="1" required />
-        <button type="submit">Enviar</button>
-    </form>
+    <main>
+        <!-- Sección de creación/edición -->
+        <section>
+            <header>
+                <h2>Registrar Usuario</h2>
+            </header>
+            <form id="userForm">
+                <input type="text" id="name" placeholder="Nombre" required />
+                <input type="email" id="email" placeholder="Email" required />
+                <input type="number" id="age" placeholder="Edad" min="1" required />
+                <button type="submit">Enviar</button>
+            </form>
+            <p id="response"></p>
+        </section>
 
-    <p id="response"></p>
-
-    <h2>Historial de registros</h2>
-    <ul id="history"></ul>
+        <!-- Historial -->
+        <section>
+            <header>
+                <h2>Historial de registros</h2>
+            </header>
+            <ul id="history"></ul>
+        </section>
+    </main>
 
     <!-- Modal de edición -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Editar Usuario</h2>
+            <header>
+                <h2>Editar Usuario</h2>
+            </header>
             <form id="editForm">
-                <input type="text" id="editName" name="name" placeholder="name" required />
-                <input type="email" id="editEmail" name="email" placeholder="email" required />
-                <input type="number" id="editAge" name="age" placeholder="age" min="1" required />
-                <button type="submit">Guardar</button>
-                <button type="button" id="cancelEdit">Cancelar</button>
+                <input type="text" id="editName" name="name" placeholder="Nombre" required />
+                <input type="email" id="editEmail" name="email" placeholder="Email" required />
+                <input type="number" id="editAge" name="age" placeholder="Edad" min="1" required />
+                <div class="buttons">
+                    <button type="submit">Guardar</button>
+                    <button type="button" id="cancelEdit">Cancelar</button>
+                </div>
             </form>
         </div>
     </div>
+
+    <!-- Modal de notificación (éxito/error) -->
+    <div id="notifyModal" class="modal">
+        <div class="modal-content" id="notifyBox">
+            <span class="close" id="closeNotify">&times;</span>
+            <header>
+                <h2 id="notifyTitle">Mensaje</h2>
+            </header>
+            <p id="notifyMessage">Contenido</p>
+        </div>
+    </div>
+
 
     <script src="js/main.js"></script>
 </body>
